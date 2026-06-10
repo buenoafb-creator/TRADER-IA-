@@ -44,7 +44,12 @@ function atualizarTabela() {
         const resultado = trade.pontos !== undefined ? (trade.pontos >=0 ? `+${trade.pontos}` : `${trade.pontos}`) : 'aberto';
         const cor = trade.pontos > 0 ? '#10b981' : (trade.pontos < 0 ? '#ef4444' : '#f59e0b');
         row.innerHTML = `
-            <td>${dataHora}</td><td>${trade.setup}</td><td>${trade.direcao}</td><td>${trade.entrada}</td><td>${trade.stop}</td><td>${trade.target}</td>
+            <td>${dataHora}</td>
+            <td>${trade.setup}</td>
+            <td>${trade.direcao}</td>
+            <td>${trade.entrada}</td>
+            <td>${trade.stop}</td>
+            <td>${trade.target}</td>
             <td style="color:${cor}">${resultado}</td>
             <td class="acao-botoes"><button onclick="excluirTrade(${trades.length - 1 - idx})"><i class="fas fa-trash"></i></button></td>
         `;
@@ -174,5 +179,73 @@ document.querySelectorAll('.tab').forEach(tab => {
     });
 });
 
+// ========== SCANNER DE ORDER BLOCKS (SMC/ICT) ==========
+function escanearOBs() {
+    const precoAtual = parseFloat(document.getElementById('precoAtual').value);
+    if (isNaN(precoAtual)) {
+        alert('Digite o preço atual do WIN$');
+        return;
+    }
+
+    // Lista de OBs pré-definida (simula níveis reais do mercado)
+    const obTemplates = [
+        { nome: "OB Bearish (4h)", zona: [166150, 166350], tipo: "VENDA", entrada: "166200 - 166250", stop: "166520", target: "165600", rr: "1:2.3" },
+        { nome: "OB Bullish (1h)", zona: [164800, 165000], tipo: "COMPRA", entrada: "164900 - 164950", stop: "164600", target: "165800", rr: "1:2.0" },
+        { nome: "FVG + OB (15min)", zona: [165400, 165550], tipo: "COMPRA", entrada: "165450 - 165500", stop: "165200", target: "166200", rr: "1:2.5" },
+        { nome: "Liquidity Grab (NY)", zona: [167100, 167300], tipo: "VENDA", entrada: "167200 - 167250", stop: "167500", target: "166300", rr: "1:2.2" },
+        { nome: "OB Bullish (Diário)", zona: [163800, 164000], tipo: "COMPRA", entrada: "163900 - 163950", stop: "163600", target: "165200", rr: "1:2.1" },
+        { nome: "OB Bearish (15m) pós-notícia", zona: [168200, 168400], tipo: "VENDA", entrada: "168300 - 168350", stop: "168600", target: "167200", rr: "1:2.4" }
+    ];
+
+    // Filtrar OBs próximos ao preço atual (dentro de 150 pontos para cima/baixo)
+    const resultados = obTemplates.filter(ob => {
+        const dentro = precoAtual >= ob.zona[0] - 150 && precoAtual <= ob.zona[1] + 150;
+        return dentro;
+    });
+
+    const container = document.getElementById('resultadosScanner');
+    if (resultados.length === 0) {
+        container.innerHTML = '<div class="ob-card">⚠️ Nenhum Order Block próximo ao preço atual. Tente outro valor ou aguarde o mercado formar novos OBs.</div>';
+        return;
+    }
+
+    container.innerHTML = resultados.map(ob => `
+        <div class="ob-card">
+            <div class="ob-info">
+                <h4>${ob.nome} <span class="ob-badge">${ob.tipo}</span></h4>
+                <p>🎯 Zona: ${ob.zona[0]} - ${ob.zona[1]}</p>
+                <p>📌 Entrada sugerida: <strong>${ob.entrada}</strong></p>
+                <p>🛑 Stop: ${ob.stop} &nbsp;|&nbsp; 🎯 Target: ${ob.target}</p>
+                <p>📈 R/R estimado: ${ob.rr}</p>
+            </div>
+            <div class="ob-actions">
+                <button onclick="usarEsteOB('${ob.entrada}', '${ob.stop}', '${ob.target}', '${ob.tipo}')">Usar este OB</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Função para preencher o formulário de trade com os dados do OB escolhido
+window.usarEsteOB = function(entrada, stop, target, direcao) {
+    // Abrir o modal de novo trade
+    const modalEl = document.getElementById('modal');
+    modalEl.style.display = 'flex';
+    
+    // Preencher campos
+    // Se a entrada veio como "166200 - 166250", pegamos o primeiro valor
+    let entradaValor = entrada.split(' - ')[0];
+    document.getElementById('entrada').value = entradaValor;
+    document.getElementById('stop').value = stop;
+    document.getElementById('target').value = target;
+    document.getElementById('direcao').value = direcao;
+    document.getElementById('setup').value = 'OB Scanner';
+    
+    alert(`Pré-preenchido com OB de ${direcao}. Ajuste os valores se necessário e salve o trade.`);
+};
+
+// Conectar o botão de escanear
+document.getElementById('scannearBtn')?.addEventListener('click', escanearOBs);
+
+// Inicialização
 carregarDados();
 carregarChecklist();
