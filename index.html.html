@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sistema Trading IA - 500 pts/dia</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1><i class="fas fa-chart-line"></i> Sistema Trading IA</h1>
+                <p>Meta: 500 pontos/dia • SMC/ICT/Wyckoff • Paper trading</p>
+            </div>
+            <div class="progress-area">
+                <div class="progress-label">Progresso hoje</div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div id="pontosHoje">0 / 500 pts</div>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="trades">📊 Trades</button>
+            <button class="tab" data-tab="setups">🎯 Setups</button>
+            <button class="tab" data-tab="analytics">📈 Análises IA</button>
+            <button class="tab" data-tab="checklist">✅ Checklist</button>
+            <button class="tab" data-tab="config">⚙️ Config</button>
+        </div>
+
+        <!-- Aba TRADES -->
+        <div id="trades" class="tab-content active">
+            <div class="toolbar">
+                <button class="btn primary" id="novoTradeBtn"><i class="fas fa-plus"></i> Novo Trade</button>
+                <button class="btn" id="exportarCsvBtn"><i class="fas fa-download"></i> Exportar CSV</button>
+                <button class="btn" id="analisarIaBtn"><i class="fas fa-robot"></i> Analisar com IA</button>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr><th>Data/Hora</th><th>Setup</th><th>Direção</th><th>Entrada</th><th>Stop</th><th>Target</th><th>Resultado</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody id="tabelaTrades"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Aba SETUPS -->
+        <div id="setups" class="tab-content">
+            <h3>Setups de alta qualidade (SMC/ICT/Wyckoff)</h3>
+            <div class="cards">
+                <div class="card"><h4>📌 OB + FVG (Tier 1)</h4><p>Order Block com Fair Value Gap adjacente. Win rate > 70%.</p><span class="badge">Recomendado</span></div>
+                <div class="card"><h4>🎣 Liquidity Grab</h4><p>Falso rompimento com retorno ao OB. Win rate ~68%.</p></div>
+                <div class="card"><h4>🔄 Wyckoff Spring/Upthrust</h4><p>Acumulação/distribuição com volume.</p></div>
+                <div class="card"><h4>⏱️ ICT Kill Zone</h4><p>Operar nas aberturas NY/Londres.</p></div>
+            </div>
+        </div>
+
+        <!-- Aba ANÁLISES IA -->
+        <div id="analytics" class="tab-content">
+            <h3>Insights automáticos</h3>
+            <div id="insightsArea" class="insights">Clique em "Analisar com IA" para ver recomendações.</div>
+        </div>
+
+        <!-- Aba CHECKLIST -->
+        <div id="checklist" class="tab-content">
+            <h3>Checklist diário</h3>
+            <div class="checklist-group">
+                <label><input type="checkbox" class="check-item"> 📰 Analisar notícias (Forex Factory)</label>
+                <label><input type="checkbox" class="check-item"> 🎯 Mapear 3+ OBs de alta qualidade</label>
+                <label><input type="checkbox" class="check-item"> 💧 Identificar zonas de liquidez (PDH/PDL)</label>
+                <label><input type="checkbox" class="check-item"> 🧠 Mental reset – esquecer trades anteriores</label>
+                <label><input type="checkbox" class="check-item"> 🛑 Stop loss obrigatório em toda operação</label>
+                <label><input type="checkbox" class="check-item"> ⏸️ Pausa após 2 perdas seguidas</label>
+                <label><input type="checkbox" class="check-item"> 📝 Registrar todos os trades</label>
+            </div>
+            <button class="btn" id="salvarChecklistBtn"><i class="fas fa-save"></i> Salvar progresso</button>
+        </div>
+
+        <!-- Aba CONFIG -->
+        <div id="config" class="tab-content">
+            <h3>Configurações do sistema</h3>
+            <label>Meta diária (pontos): <input type="number" id="metaPontos" value="500" step="10"></label>
+            <label>Contratos atuais: <input type="number" id="contratos" value="5" step="1"></label>
+            <label>Risco por trade (%): <input type="number" id="riscoPercent" value="0.5" step="0.1"></label>
+            <button class="btn" id="salvarConfigBtn">Salvar configurações</button>
+        </div>
+
+        <footer>📊 Sistema Trading IA • Dados salvos no navegador • <span id="totalTrades">0</span> trades registrados</footer>
+    </div>
+
+    <!-- Modal Novo Trade -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Registrar Trade</h2>
+            <form id="tradeForm">
+                <input type="datetime-local" id="dataHora" required>
+                <select id="setup" required><option value="OB+FVG">OB+FVG</option><option value="Liquidity Grab">Liquidity Grab</option><option value="Wyckoff Spring">Wyckoff Spring</option></select>
+                <select id="direcao" required><option value="COMPRA">COMPRA (Long)</option><option value="VENDA">VENDA (Short)</option></select>
+                <input type="number" id="entrada" placeholder="Preço entrada" step="0.01" required>
+                <input type="number" id="stop" placeholder="Stop Loss" step="0.01" required>
+                <input type="number" id="target" placeholder="Take Profit" step="0.01" required>
+                <input type="number" id="saida" placeholder="Preço saída (deixe vazio se aberto)" step="0.01">
+                <input type="number" id="pontos" placeholder="Pontos (automático se preencher saída)">
+                <textarea id="contexto" placeholder="Contexto (ex: OB na 166.195, FVG não mitigado...)"></textarea>
+                <label>Emoção (1=medo, 10=confiança): <input type="range" id="emocao" min="1" max="10" value="5"></label>
+                <button type="submit" class="btn primary">Salvar Trade</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
