@@ -24,6 +24,7 @@
         <div class="tabs">
             <button class="tab active" data-tab="trades">📊 Trades</button>
             <button class="tab" data-tab="setups">🎯 Setups</button>
+            <button class="tab" data-tab="scanner">🔍 Scanner OB</button>
             <button class="tab" data-tab="analytics">📈 Análises IA</button>
             <button class="tab" data-tab="checklist">✅ Checklist</button>
             <button class="tab" data-tab="config">⚙️ Config</button>
@@ -39,7 +40,7 @@
             <div class="table-wrapper">
                 <table>
                     <thead>
-                        <tr><th>Data/Hora</th><th>Setup</th><th>Direção</th><th>Entrada</th><th>Stop</th><th>Target</th><th>Resultado</th><th>Ações</th></tr>
+                        <tr><th>Data/Hora</th><th>Setup</th><th>Direção</th><th>Entrada</th><th>Stop</th><th>Target</th><th>Resultado</th><th>Ações</th</tr>
                     </thead>
                     <tbody id="tabelaTrades"></tbody>
                 </table>
@@ -54,6 +55,18 @@
                 <div class="card"><h4>🎣 Liquidity Grab</h4><p>Falso rompimento com retorno ao OB. Win rate ~68%.</p></div>
                 <div class="card"><h4>🔄 Wyckoff Spring/Upthrust</h4><p>Acumulação/distribuição com volume.</p></div>
                 <div class="card"><h4>⏱️ ICT Kill Zone</h4><p>Operar nas aberturas NY/Londres.</p></div>
+            </div>
+        </div>
+
+        <!-- Aba SCANNER OB (NOVA) -->
+        <div id="scanner" class="tab-content">
+            <h3><i class="fas fa-search"></i> Scanner de Order Blocks (SMC/ICT)</h3>
+            <div class="scanner-config">
+                <label>Preço atual do WIN$: <input type="number" id="precoAtual" step="0.5" placeholder="ex: 165000"></label>
+                <button class="btn primary" id="scannearBtn"><i class="fas fa-chart-line"></i> Escanear OBs</button>
+            </div>
+            <div id="resultadosScanner" class="scanner-results">
+                <!-- Aqui aparecerão os OBs encontrados -->
             </div>
         </div>
 
@@ -97,7 +110,7 @@
             <h2>Registrar Trade</h2>
             <form id="tradeForm">
                 <input type="datetime-local" id="dataHora" required>
-                <select id="setup" required><option value="OB+FVG">OB+FVG</option><option value="Liquidity Grab">Liquidity Grab</option><option value="Wyckoff Spring">Wyckoff Spring</option></select>
+                <select id="setup" required><option value="OB+FVG">OB+FVG</option><option value="Liquidity Grab">Liquidity Grab</option><option value="Wyckoff Spring">Wyckoff Spring</option><option value="OB Scanner">OB Scanner</option></select>
                 <select id="direcao" required><option value="COMPRA">COMPRA (Long)</option><option value="VENDA">VENDA (Short)</option></select>
                 <input type="number" id="entrada" placeholder="Preço entrada" step="0.01" required>
                 <input type="number" id="stop" placeholder="Stop Loss" step="0.01" required>
