@@ -57,6 +57,7 @@ header p { color: #94a3b8; margin-top: 5px; font-size: 0.9rem; }
     background: #0f172a;
     gap: 8px;
     padding: 0 20px;
+    flex-wrap: wrap;
 }
 .tab {
     background: none;
@@ -152,6 +153,58 @@ th { color: #94a3b8; font-weight: 500; }
     align-items: center;
     gap: 12px;
     margin-bottom: 14px;
+    cursor: pointer;
+}
+
+/* Scanner */
+.scanner-config {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.scanner-config input {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: white;
+    width: 180px;
+}
+.scanner-results {
+    display: grid;
+    gap: 16px;
+}
+.ob-card {
+    background: #0f172a;
+    border-left: 4px solid #3b82f6;
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.ob-info h4 { margin-bottom: 8px; color: #3b82f6; }
+.ob-info p { margin: 4px 0; font-size: 0.9rem; }
+.ob-badge {
+    background: #10b98120;
+    color: #10b981;
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+.ob-actions button {
+    background: #3b82f6;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 40px;
+    color: white;
     cursor: pointer;
 }
 
